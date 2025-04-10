@@ -2107,4 +2107,8 @@ public class DFSConfigKeys extends CommonConfigurationKeys {
   public static final long DFS_LEASE_HARDLIMIT_DEFAULT =
       HdfsClientConfigKeys.DFS_LEASE_HARDLIMIT_DEFAULT;
 
+  public static final String IPC_SERVER_OBSERVER_TOO_STALE_RETRY_ACTIVE_ENABLE  =
+          "dfs.namenode.observer.too.stale.retry-active.enable";
+  public static final boolean IPC_SERVER_OBSERVER_TOO_STALE_RETRY_ACTIVE_ENABLE_DEFAULT  =
+          false;
 }

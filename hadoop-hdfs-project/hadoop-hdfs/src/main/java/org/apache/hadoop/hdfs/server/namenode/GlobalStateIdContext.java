@@ -26,10 +26,12 @@ import java.util.concurrent.TimeUnit;
 import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.ha.HAServiceProtocol.HAServiceState;
+import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.protocol.ClientProtocol;
 import org.apache.hadoop.hdfs.server.namenode.ha.ObserverReadProxyProvider;
 import org.apache.hadoop.hdfs.server.namenode.ha.ReadOnly;
 import org.apache.hadoop.ipc.AlignmentContext;
+import org.apache.hadoop.ipc.ObserverRetryOnActiveException;
 import org.apache.hadoop.ipc.RetriableException;
 import org.apache.hadoop.ipc.StandbyException;
 import org.apache.hadoop.ipc.protobuf.RpcHeaderProtos.RpcRequestHeaderProto;
@@ -156,9 +158,18 @@ class GlobalStateIdContext implements AlignmentContext {
         ESTIMATED_TRANSACTIONS_PER_SECOND
             * TimeUnit.MILLISECONDS.toSeconds(clientWaitTime)
             * ESTIMATED_SERVER_TIME_MULTIPLIER) {
-      throw new RetriableException(
-          "Observer Node is too far behind: serverStateId = "
-              + serverStateId + " clientStateId = " + clientStateId);
+      if (namesystem.isStale()) {
+        String message = "Retrying to Active NameNode, Observer Node is too far behind: serverStateId = " + serverStateId + " clientStateId = " + clientStateId;
+        FSNamesystem.LOG.warn(message);
+        throw new ObserverRetryOnActiveException(message);
+      } else {
+        throw new RetriableException(
+                String.format(
+                        "%s is not enabled, Continue Retrying to Observer NameNode, Observer Node is too far behind: serverStateId = %d clientStateId = %d",
+                        DFSConfigKeys.IPC_SERVER_OBSERVER_TOO_STALE_RETRY_ACTIVE_ENABLE,
+                        serverStateId, clientStateId
+                ));
+      }
     }
     return clientStateId;
   }

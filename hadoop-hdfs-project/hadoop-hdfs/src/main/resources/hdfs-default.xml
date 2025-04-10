@@ -3754,6 +3754,13 @@
 </property>
 
 <property>
+  <name>dfs.namenode.observer.too.stale.retry-active.enable</name>
+  <value>false</value>
+  <description>When enabled, allows client to actively retry to Active NameNode when the Observer NameNode is too far behind client state id.
+  </description>
+</property>
+
+<property>
   <name>dfs.namenode.top.windows.minutes</name>
   <value>1,5,25</value>
   <description>comma separated list of nntop reporting periods in minutes
