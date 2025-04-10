@@ -158,7 +158,7 @@ class GlobalStateIdContext implements AlignmentContext {
         ESTIMATED_TRANSACTIONS_PER_SECOND
             * TimeUnit.MILLISECONDS.toSeconds(clientWaitTime)
             * ESTIMATED_SERVER_TIME_MULTIPLIER) {
-      if (namesystem.isStale()) {
+      if (namesystem.isRetryActive()) {
         String message = "Retrying to Active NameNode, Observer Node is too far behind: serverStateId = " + serverStateId + " clientStateId = " + clientStateId;
         FSNamesystem.LOG.warn(message);
         throw new ObserverRetryOnActiveException(message);
