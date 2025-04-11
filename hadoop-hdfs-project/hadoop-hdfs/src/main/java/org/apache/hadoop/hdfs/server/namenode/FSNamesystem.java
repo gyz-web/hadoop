@@ -693,7 +693,7 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
   private final Object metaSaveLock = new Object();
 
   private final MessageDigest digest;
-
+  private final boolean isRetryActive;
   /**
    * Notify that loading of this FSDirectory is complete, and
    * it is imageLoaded for use
@@ -1078,6 +1078,9 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
       this.isGetBlocksCheckOperationEnabled = conf.getBoolean(
           DFSConfigKeys.DFS_NAMENODE_GETBLOCKS_CHECK_OPERATION_KEY,
           DFSConfigKeys.DFS_NAMENODE_GETBLOCKS_CHECK_OPERATION_DEFAULT);
+      this.isRetryActive = conf.getBoolean(
+              DFSConfigKeys.DFS_NAMENODE_OBSERVER_TOO_STALE_RETRY_ACTIVE_ENABLE,
+              DFSConfigKeys.DFS_NAMENODE_OBSERVER_TOO_STALE_RETRY_ACTIVE_ENABLE_DEFAULT);
 
     } catch(IOException e) {
       LOG.error(getClass().getSimpleName() + " initialization failed.", e);
@@ -1136,6 +1139,10 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
 
   boolean isSnapshotTrashRootEnabled() {
     return isSnapshotTrashRootEnabled;
+  }
+
+  public boolean isRetryActive() {
+    return isRetryActive;
   }
 
   void lockRetryCache() {
