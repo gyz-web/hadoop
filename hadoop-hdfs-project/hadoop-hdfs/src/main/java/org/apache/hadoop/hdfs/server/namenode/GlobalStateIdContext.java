@@ -166,7 +166,7 @@ class GlobalStateIdContext implements AlignmentContext {
         throw new RetriableException(
                 String.format(
                         "%s is not enabled, Continue Retrying to Observer NameNode, Observer Node is too far behind: serverStateId = %d clientStateId = %d",
-                        DFSConfigKeys.IPC_SERVER_OBSERVER_TOO_STALE_RETRY_ACTIVE_ENABLE,
+                        DFSConfigKeys.DFS_NAMENODE_OBSERVER_TOO_STALE_RETRY_ACTIVE_ENABLE,
                         serverStateId, clientStateId
                 ));
       }
